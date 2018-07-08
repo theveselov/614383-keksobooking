@@ -49,7 +49,6 @@ var PHOTOS_OFFER = [
 ];
 
 
-
 var map = document.querySelector('.map');
 var pinBlock = map.querySelector('.map__pins');
 
@@ -58,7 +57,6 @@ var cardTemplate = document.querySelector('template');
 var mapCard = cardTemplate.content.querySelector('.map__card');
 
 var filtersBlock = map.querySelector('.map__filters-container');
-
 
 
 var getRandomNumber = function (min, max) {
@@ -237,7 +235,6 @@ advert.offer.rooms + ' ' + ' ' + cardRooms + ' ' + 'для' + ' ' + advert.offer
 };
 
 
-
 var renderPin = function (advert, i) {
   var mapPin = cardTemplate.content.querySelector('.map__pin');
 
@@ -277,7 +274,6 @@ var renderPin = function (advert, i) {
 };
 
 
-
 var createPins = function () {
   var pinFragment = document.createDocumentFragment();
   for (var i = 0; i < cards.length; i++) {
@@ -285,7 +281,6 @@ var createPins = function () {
   }
   pinBlock.appendChild(pinFragment);
 };
-
 
 
 var form = document.querySelector('.ad-form');
