@@ -125,7 +125,7 @@ var getAdvert = function () {
         title: OFFER_TITLES[getRandomValue(OFFER_TITLES)],
         address: xСoordinate + ',' + yСoordinate,
         price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-        type: getrandomType(Object.keys(TYPES_OFFER)),
+        type: TYPES_OFFER[getrandomType(Object.keys(TYPES_OFFER))],
         rooms: getRandomNumber(1, ROOMS_QUANTITY),
         guests: getRandomNumber(1, GUESTS_QUANTITY),
         checkin: CHECKIN_OFFER[getRandomValue(CHECKIN_OFFER)],
@@ -164,8 +164,7 @@ var renderCard = function (advert) {
   cardElement.querySelector('.popup__title').textContent = advert.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
-
-  cardElement.querySelector('.popup__type').textContent = TYPES_OFFER[advert.offer.type];
+  cardElement.querySelector('.popup__type').textContent = advert.offer.type;
   var cardRooms;
   switch (advert.offer.rooms) {
     case 1:
@@ -204,7 +203,7 @@ advert.offer.rooms + ' ' + ' ' + cardRooms + ' ' + 'для' + ' ' + advert.offer
       photoElement.height = PHOTOS_HEIGHT;
       photoElement.alt = 'Фотография жилья';
       photoElement.src = advert.offer.photos[j];
-      photoList.appendChild(photoElement);
+      photoElement.style.marginRight = '5' + 'px';
     }
     return photoElement;
   };
@@ -247,9 +246,9 @@ var closeCard = function () {
 var renderPin = function (advert, i) {
   var mapPin = cardTemplate.content.querySelector('.map__pin');
   var filtersBlock = map.querySelector('.map__filters-container');
-  var pinElement = mapPin.cloneNode(true);
-  var pinX = advert.location.x;
-  var pinY = advert.location.y;
+  var pinElement = mapPin.cloneNode(true); // Копируем шаблон
+  var pinX = advert.location.x; // координаты метки по оси X
+  var pinY = advert.location.y; // координаты метки по оси Y
   pinElement.style = 'left: ' + pinX + 'px; top: ' + pinY + 'px;';
   pinElement.querySelector('img').src = advert.author.avatar;
   pinElement.querySelector('img').alt = advert.offer.title;
@@ -331,105 +330,106 @@ var showPage = function () {
 };
 
 
-var timeIn = form.elements.timein;
-var timeOut = form.elements.timeout;
-var room = form.elements.rooms;
-var capacity = form.elements.capacity;
+var formElement = document.querySelector('.ad-form');
+  var fieldsetElement = formElement.querySelectorAll('fieldset');
+  var inputAddressElement = formElement.querySelector('input[name="address"]');
+  var homeTypeElement = formElement.elements.type;
+  var timeInElement = formElement.elements.timein;
+  var timeOutElement = formElement.elements.timeout;
+  var roomElement = formElement.elements.rooms;
+  var capacityElement = formElement.elements.capacity;
 
+  var changeType = function () {
+    var inputPriceElement = formElement.elements.price;
 
-var changeType = function (evt) {
-  var inputPrice = form.elements.price;
-  var price = {
-    bungalo: PRICE_MIN_BUNGALO,
-    flat: PRICE_MIN_FLAT,
-    house: PRICE_MIN_HOUSE,
-    palace: PRICE_MIN_PALACE
+    var PriceMap = {
+      bungalo: PRICE_MIN_BUNGALO,
+      flat: PRICE_MIN_FLAT,
+      house: PRICE_MIN_HOUSE,
+      palace: PRICE_MIN_PALACE
+    };
+
+    inputPriceElement.min = PriceMap[homeTypeElement.value];
+    inputPriceElement.placeholder = inputPriceElement.min;
   };
-  var newMinPrice = price[evt.target.value];
-  inputPrice.min = newMinPrice;
-  inputPrice.placeholder = newMinPrice;
-};
 
-var onTypeAndPriceChange = function (evt) {
-  changeType(evt);
-};
-
-var onTimeInChange = function () {
-  timeOut.value = timeIn.value;
-};
-
-var onTimeOutChange = function () {
-  timeIn.value = timeOut.value;
-};
-
-var changeRoomAndCapacity = function () {
-  var validationRoomsAndCapacity = {
-    1: ['1'],
-    2: ['2', '1'],
-    3: ['3', '2', '1'],
-    100: ['0']
+  var onTypeAndPriceChange = function () {
+    changeType();
   };
-  var selectRoom = room.options[room.selectedIndex].value;
-  var selectCapacity = capacity.options[capacity.selectedIndex].value;
-  var isCapasityFalse = validationRoomsAndCapacity[selectRoom].indexOf(selectCapacity) === -1;
-  if (isCapasityFalse) {
-    capacity.setCustomValidity('Количество гостей не должно превышать количество комнат,' +
-    'при выборе 100 комнат - возможно выбрать только вариант "не для гостей"');
-  } else {
-    capacity.setCustomValidity('');
-  }
-};
 
-var onRoomAndCapacityChange = function () {
-  changeRoomAndCapacity();
-};
+  var onTimeInChange = function () {
+    timeOutElement.value = timeInElement.value;
+  };
 
-var deletePins = function () {
-  var pins = document.querySelector('.map__pins');
-  var buttons = pins.querySelectorAll('button');
-  for (var j = 1; j < buttons.length; j++) {
-    pins.removeChild(buttons[j]);
-  }
-};
+  var onTimeOutChange = function () {
+    timeInElement.value = timeOutElement.value;
+  };
 
-var getInputsDisabled = function () {
-  for (var i = 0; i < formFieldset.length; i++) {
-    formFieldset[i].setAttribute('disabled', '');
-  }
-};
+  var changeRoomAndCapacity = function () {
+    var ValidationRoomsAndCapacity = {
+      1: ['1'],
+      2: ['2', '1'],
+      3: ['3', '2', '1'],
+      100: ['0']
+    };
 
-var resetMapAndForm = function () {
-  map.classList.add('map--faded');
-  form.classList.add('ad-form--disabled');
-  getInputsDisabled();
-  inputAddress.value = getMainButtonCoordinate();
-  deletePins();
-  cardElement.classList.add('hidden');
-  form.reset();
-  getMainButtonCoordinate();
-};
+    var selectRoom = roomElement.options[roomElement.selectedIndex].value;
+    var selectCapacity = capacityElement.options[capacityElement.selectedIndex].value;
+    var isCapasityFalse = ValidationRoomsAndCapacity[selectRoom].indexOf(selectCapacity) === -1;
 
-var onButtonResetClick = function () {
-  resetMapAndForm();
-};
+    if (isCapasityFalse) {
+      capacityElement.setCustomValidity('Количество гостей не должно превышать количество комнат,' +
+      'при выборе 100 комнат - возможно выбрать только вариант "не для гостей"');
+    } else {
+      capacityElement.setCustomValidity('');
+    }
+  };
 
-var onButtonResetKeydown = function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    resetMapAndForm();
-  }
-};
+  var onRoomAndCapacityChange = function () {
+    changeRoomAndCapacity();
+  };
 
-var changeFieldsetForm = function () {
-  var homeType = form.elements.type;
-  homeType.addEventListener('change', onTypeAndPriceChange);
-  timeIn.addEventListener('change', onTimeInChange);
-  timeOut.addEventListener('change', onTimeOutChange);
-  room.addEventListener('change', onRoomAndCapacityChange);
-  capacity.addEventListener('change', onRoomAndCapacityChange);
-  var resetButton = form.querySelector('.ad-form__reset');
-  resetButton.addEventListener('click', onButtonResetClick);
-  resetButton.addEventListener('keydown', onButtonResetKeydown);
-};
+  var changeFieldsetForm = function () {
+    homeTypeElement.addEventListener('change', onTypeAndPriceChange);
+    timeInElement.addEventListener('change', onTimeInChange);
+    timeOutElement.addEventListener('change', onTimeOutChange);
+    roomElement.addEventListener('change', onRoomAndCapacityChange);
+    capacityElement.addEventListener('change', onRoomAndCapacityChange);
+  };
+
+  var onSuccessUpLoadForm = function () {
+    var successBlockElement = document.querySelector('.success');
+
+    successBlockElement.classList.remove('hidden');
+
+    var successButtonElement = successBlockElement.querySelector('.success__button');
+
+    successButtonElement.addEventListener('click', function () {
+      successBlockElement.classList.add('hidden');
+    });
+
+    window.map.resetMapAndForm();
+  };
+
+  formElement.addEventListener('submit', function (evt) {
+    window.backend.requestData(window.util.variablesConst.URL_POST, 'POST', new FormData(formElement), onSuccessUpLoadForm, window.util.loadErrorPopup);
+    evt.preventDefault();
+  });
+
+  var initForm = function () {
+    changeRoomAndCapacity();
+    changeFieldsetForm();
+    changeType();
+  };
+
+  initForm();
+
+  window.formOut = {
+    form: formElement,
+    inputAddress: inputAddressElement,
+    fieldset: fieldsetElement,
+    changeType: changeType
+  };
 
 getMainButtonCoordinate();
 showPage();
