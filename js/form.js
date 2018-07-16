@@ -17,13 +17,13 @@
 
   var changeType = function (evt) {
     var inputPrice = form.elements.price;
-    var price = {
+    var priceMap = {
       bungalo: PRICE_MIN_BUNGALO,
       flat: PRICE_MIN_FLAT,
       house: PRICE_MIN_HOUSE,
       palace: PRICE_MIN_PALACE
     };
-    var newMinPrice = price[evt.target.value];
+    var newMinPrice = priceMap[evt.target.value];
     inputPrice.min = newMinPrice;
     inputPrice.placeholder = newMinPrice;
   };
@@ -70,6 +70,16 @@
     room.addEventListener('change', onRoomAndCapacityChange);
     capacity.addEventListener('change', onRoomAndCapacityChange);
   };
+
+  var onSuccessUpLoadForm = function () {
+    form.reset();
+    window.map.getMainButtonCoordinate();
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.upLoad(new FormData(form), onSuccessUpLoadForm, window.pin.onErrorLoad);
+    evt.preventDefault();
+  });
 
 
   changeRoomAndCapacity();

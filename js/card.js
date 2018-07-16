@@ -18,18 +18,19 @@
     cardElement.querySelector('.popup__title').textContent = advert.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = advert.offer.type;
+    var typesMap = {
+      palace: 'Дворец',
+      flat: 'Квартира',
+      house: 'Дом',
+      bungalo: 'Бунгало'};
+    cardElement.querySelector('.popup__type').textContent = typesMap[advert.offer.type];
     var cardRooms;
-    switch (advert.offer.rooms) {
-      case 1:
-        cardRooms = 'комната';
-        break;
-      case 5:
-        cardRooms = 'комнат';
-        break;
-      default:
-        cardRooms = 'комнаты';
-        break;
+    if (advert.offer.rooms % 5 === 0) {
+      cardRooms = 'комнат';
+    } else if (advert.offer.rooms === 1) {
+      cardRooms = 'комната';
+    } else {
+      cardRooms = 'комнаты';
     }
     var cardGuests;
     switch (advert.offer.guests) {
@@ -68,6 +69,7 @@
         photoElement.alt = 'Фотография жилья';
         photoElement.src = advert.offer.photos[j];
         photoElement.style.marginRight = '5' + 'px';
+        photoElement.style.marginBottom = '5' + 'px';
         photoList.appendChild(photoElement);
       }
       return photoElement;
