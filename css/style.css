@@ -1,16 +1,7 @@
 @font-face {
   font-family: "Roboto";
-  src: url("../fonts/Roboto-Bold.woff2") format("woff2"),
-      url("../fonts/Roboto-Bold.woff") format("woff");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Roboto";
-  src: url("../fonts/Roboto-Regular.woff2") format("woff2"),
-      url("../fonts/Roboto-Regular.woff") format("woff");
+  src: url("../fonts/roboto.woff") format("woff"),
+    url("../fonts/roboto.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -18,9 +9,18 @@
 
 @font-face {
   font-family: "Roboto";
-  src: url("../fonts/Roboto-Medium.woff2") format("woff2"),
-      url("../fonts/Roboto-Medium.woff") format("woff");
+  src: url("../fonts/robotomedium.woff") format("woff"),
+    url("../fonts/robotomedium.woff2") format("woff2");
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/robotobold.woff") format("woff"),
+    url("../fonts/robotobold.woff2") format("woff2");
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -78,7 +78,6 @@ fieldset {
 }
 
 
-/* Map */
 
 .promo {
   position: absolute;
@@ -116,7 +115,7 @@ fieldset {
   height: 750px;
 
   background-color: #82bcc0;
-  background-image: url("../img/map.jpg");
+  background-image: url('../img/map.jpg');
   background-repeat: no-repeat;
   background-position: center bottom;
 
@@ -335,7 +334,6 @@ fieldset {
 }
 
 
-/* Фильтры */
 
 .map__filters-container {
   width: 100%;
@@ -377,12 +375,10 @@ fieldset {
   font-size: 14px;
   vertical-align: middle;
   cursor: pointer;
-
-  border: 1px solid transparent;
 }
 
 .map__filter:hover {
-  border: 1px solid #ffaa99;
+  border-color: #ffaa99;
 }
 
 .map__filter:focus {
@@ -483,7 +479,6 @@ fieldset {
 }
 
 
-/* Форма объявления */
 
 .notice {
   margin: 0 120px;
@@ -883,7 +878,6 @@ fieldset {
 }
 
 
-/* Футер */
 
 .footer {
   margin-top: 30px;
@@ -1005,7 +999,6 @@ fieldset {
 }
 
 
-/* Карточка объявления */
 
 .map__card {
   position: absolute;
@@ -1160,7 +1153,6 @@ fieldset {
 
 .popup__photo {
   margin-right: 5px;
-  margin-bottom: 5px;
 }
 
 .popup__photo:hover {
@@ -1217,12 +1209,30 @@ fieldset {
           transform: translateX(-50%);
 }
 
-.errorMessage {
+.success__button {
+  width: 50px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+
+.loadPopup {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
   margin: 0 auto;
   position: fixed;
   text-align: center;
   width: 1200px;
+  height: 50px;
   font-size: 25px;
   z-index: 100;
-  background-color: blue;
+  background-color: #d28d8d;
+}
+
+.loadPopupButton {
+  width: 100px;
+  height: 30px;
+  font-size: 17px;
 }
