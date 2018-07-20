@@ -1,47 +1,54 @@
 'use strict';
 
-(function () {
+window.backend = (function () {
+  var URL_GET = 'https://js.dump.academy/keksobooking/data';
+  var URL_POST = 'https://js.dump.academy/keksobooking';
 
-
-  var CODE_SUCCESS = 200;
-  var CODE_ERROR = 500;
-  var TIMEOUT = 10000;
-
-
-  var requestData = function (url, method, data, onLoad, onError) {
+  var getJSON = function (onLoad, onError, method, data) {
     var xhr = new XMLHttpRequest();
-
     xhr.responseType = 'json';
-    xhr.timeout = TIMEOUT;
-    xhr.addEventListener('load', function () {
 
+    xhr.addEventListener('load', function () {
+      var error;
       switch (xhr.status) {
-        case CODE_SUCCESS:
+        case 200:
           onLoad(xhr.response);
           break;
-        case CODE_ERROR:
-          onError('Ошибка сервера');
+        case 400:
+          error = 'Неверный запрос';
           break;
+        case 401:
+          error = 'Пользователь не авторизован';
+          break;
+        case 404:
+          error = 'Ничего не найдено';
+          break;
+
         default:
-          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
-          break;
+          error = 'Cтатус ответа: : ' + xhr.status + ' ' + xhr.statusText;
+      }
+      if (error) {
+        onError(error);
       }
     });
-
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + TIMEOUT + 'мс');
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
-
-    xhr.open(method, url);
-    xhr.send(data);
+    if (method === 'GET') {
+      xhr.open('GET', URL_GET);
+      xhr.send();
+    } else if (method === 'POST') {
+      xhr.open('POST', URL_POST);
+      xhr.send(data);
+    }
   };
 
-  window.backend = {
-    requestData: requestData
+  return {
+    load: function (onLoad, onError) {
+      getJSON(onLoad, onError, 'GET');
+    },
+    save: function (data, onLoad, onError) {
+      getJSON(onLoad, onError, 'POST', data);
+    }
   };
-
 })();
