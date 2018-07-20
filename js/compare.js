@@ -1,11 +1,11 @@
 'use strict';
 
-window.compare = (function () {
+(function () {
   var LOW_HOUSIN_PRICE = 0;
   var MID_HOUSING_PRICE = 10000;
   var HIGH_HOUSING_PRICE = 50000;
 
-  return {
+  window.compare =  {
     getNewPlaces: function (evt, max) {
       var filteredPins = {};
       var selects = evt.currentTarget.querySelectorAll('.map__filter');

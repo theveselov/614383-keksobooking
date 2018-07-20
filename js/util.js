@@ -1,11 +1,11 @@
 'use strict';
 
-window.util = (function () {
+(function () {
   var ESC_KEYCODE = 27;
   var DEBOUNCE_INTERVAL = 500;
 
   var lastTimeout;
-  return {
+  window.util =  {
     onPopupEscPress: function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         window.card.delete();

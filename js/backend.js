@@ -1,6 +1,6 @@
 'use strict';
 
-window.backend = (function () {
+(function () {
   var URL_GET = 'https://js.dump.academy/keksobooking/data';
   var URL_POST = 'https://js.dump.academy/keksobooking';
 
@@ -43,7 +43,7 @@ window.backend = (function () {
     }
   };
 
-  return {
+  window.backend = {
     load: function (onLoad, onError) {
       getJSON(onLoad, onError, 'GET');
     },
