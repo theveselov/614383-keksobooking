@@ -18,7 +18,6 @@
       });
 
       filteredPins.checkboxes = [];
-
       checkboxes.forEach(function (checkbox) {
         if (checkbox.checked) {
           filteredPins.checkboxes.push(checkbox.value);
